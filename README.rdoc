@@ -1,4 +1,4 @@
-= dm-is-versioned
+= mrks/dm-is-versioned
 
 DataMapper plugin enabling <b>simple</b> versioning of models.
 
@@ -8,6 +8,10 @@ can be restored later if needed.
 
 <b>Please Note!</b> this gem behaves differently to how AR's :acts_as_versioned works.
 There is currently no multi version storage possible.
+
+Also, other than the original dm-is-versioned, this implementation stores the current version in the
+versions table. This has the advantage that books.versions.first returns the version that is currently
+valid.
 
 
 == Installation
@@ -99,6 +103,7 @@ This is how it would look like:
   ---------------------------------------------------------------------------------------
   | id | title                                | body                       | updated_at |
   ---------------------------------------------------------------------------------------
+  | 1 | 'An updated & versioned Post title'   | 'A versioned Post body'    | DateTime   |
   | 1 | 'A versioned Post title'              | 'A versioned Post body'    | DateTime   |
 
 
@@ -106,7 +111,7 @@ This is how it would look like:
 
 Once you have a versioned model, you can retrieve <b>the previous version</b>, like this:
 
-  old_post = post.versions.first
+  old_post = post.versions.last
     => #<Post::Version @id=1 @title="A versioned Post title" @body=... @updated_at=...>
 
 
