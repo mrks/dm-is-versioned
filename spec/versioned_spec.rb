@@ -95,12 +95,12 @@ describe 'DataMapper::Is::Versioned' do
           end
 
           it 'should not have the same value for the versioned field' do
-            @story.updated_at.should_not == Story::Version.last.updated_at
+            @story.updated_at.should_not == Story::Version.first(:order => :saved_at).updated_at
           end
 
           it 'should save the original value, not the inner update' do
             # changes to the story between saves shouldn't be updated.
-            @story.versions.first.title.should == 'A Story'
+            @story.versions.first(:order => :saved_at).title.should == 'A Story'
           end
         end
       end
