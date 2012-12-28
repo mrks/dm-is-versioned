@@ -50,20 +50,8 @@ module DataMapper
 
         extend(Migration) if respond_to?(:auto_migrate!)
 
-        properties.each do |property|
-          name = property.name
-          before "#{name}=".to_sym do
-            unless (value = property.get(self)).nil? || pending_version_attributes.key?(name)
-              pending_version_attributes[name] = value
-            end
-          end
-        end
-
-        after :update do
-          if clean? && pending_version_attributes.key?(on)
-            model::Version.create(attributes.merge(pending_version_attributes))
-            pending_version_attributes.clear
-          end
+        after :save do
+          model::Version.create(attributes)
         end
 
         extend ClassMethods
@@ -99,16 +87,6 @@ module DataMapper
       end # ClassMethods
 
       module InstanceMethods
-        ##
-        # Returns a hash of original values to be stored in the
-        # versions table when a new version is created. It is
-        # cleared after a version model is created.
-        #
-        # --
-        # @return <Hash>
-        def pending_version_attributes
-          @pending_version_attributes ||= {}
-        end
 
         ##
         # Returns a collection of other versions of this resource.

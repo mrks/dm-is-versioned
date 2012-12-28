@@ -47,8 +47,8 @@ describe 'DataMapper::Is::Versioned' do
         Story.create(:title => 'A Very Interesting Article')
       end
 
-      it 'should not create a versioned copy' do
-        Story::Version.all.size.should == 0
+      it 'should create a versioned copy' do
+        Story::Version.all.size.should == 1
       end
     end
 
@@ -59,8 +59,8 @@ describe 'DataMapper::Is::Versioned' do
           @story.save.should be(true)
         end
 
-        it 'should not create a versioned copy' do
-          Story::Version.all.size.should == 0
+        it 'should create a versioned copy' do
+          Story::Version.all.size.should == 1
         end
       end
 
@@ -70,8 +70,8 @@ describe 'DataMapper::Is::Versioned' do
           @story.save.should be(true)
         end
 
-        it 'should not create a versioned copy' do
-          Story::Version.all.size.should == 0
+        it 'should create a versioned copy' do
+          Story::Version.all.size.should == 1
         end
       end
 
@@ -90,17 +90,17 @@ describe 'DataMapper::Is::Versioned' do
             @story.save.should be(true)
           end
 
-          it 'should create a versioned copy' do
-            Story::Version.all.size.should == 1
+          it 'should create two versioned copies' do
+            Story::Version.all.size.should == 2
           end
 
           it 'should not have the same value for the versioned field' do
-            @story.updated_at.should_not == Story::Version.first.updated_at
+            @story.updated_at.should_not == Story::Version.last.updated_at
           end
 
           it 'should save the original value, not the inner update' do
             # changes to the story between saves shouldn't be updated.
-            @story.versions.last.title.should == 'A Story'
+            @story.versions.first.title.should == 'A Story'
           end
         end
       end
@@ -112,8 +112,8 @@ describe 'DataMapper::Is::Versioned' do
         @story.should be_saved
       end
 
-      it 'should return an empty array when there are no versions' do
-        @story.versions.should == []
+      it 'should return an array containing the only valid version after creation' do
+        @story.versions.should == [@story]
       end
 
       it 'should return a collection when there are versions' do
