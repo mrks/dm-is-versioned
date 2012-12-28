@@ -8,7 +8,7 @@ DATAMAPPER     = SOURCE == :path ? Pathname(__FILE__).dirname.parent : 'http://g
 DM_VERSION     = '~> 1.2.0'
 DO_VERSION     = '~> 0.10.6'
 DM_DO_ADAPTERS = %w[ sqlite postgres mysql oracle sqlserver ]
-CURRENT_BRANCH = ENV.fetch('GIT_BRANCH', 'master')
+CURRENT_BRANCH = ENV.fetch('GIT_BRANCH', 'release-1.2')
 
 gem 'dm-core', DM_VERSION,
   SOURCE  => "#{DATAMAPPER}/dm-core#{REPO_POSTFIX}",
@@ -40,6 +40,7 @@ group :datamapper do
   if (do_adapters = DM_DO_ADAPTERS & adapters).any?
     do_options = {}
     do_options[:git] = "#{DATAMAPPER}/do#{REPO_POSTFIX}" if ENV['DO_GIT'] == 'true'
+    do_options[:branch] = CURRENT_BRANCH
 
     gem 'data_objects', DO_VERSION, do_options.dup
 
