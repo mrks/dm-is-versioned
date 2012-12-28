@@ -74,6 +74,7 @@ module DataMapper
               options = property.options.merge(:key => property.name == @on)
 
               options[:key] = true if options.delete(:serial)
+              options.delete(:scale) if options[:scale] == nil
 
               model.property(property.name, type, options)
               model.finalize
