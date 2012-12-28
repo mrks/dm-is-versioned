@@ -88,6 +88,7 @@ module DataMapper
               options[:key] = true if options.delete(:serial)
 
               model.property(property.name, type, options)
+              model.finalize
             end
 
             model
